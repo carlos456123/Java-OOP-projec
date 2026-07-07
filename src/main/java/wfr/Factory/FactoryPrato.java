@@ -3,6 +3,12 @@ package wfr.Factory;
 import wfr.Base.ItemCardapio;
 import wfr.Base.Prato;
 import wfr.Base.PratoBase;
+
+/**
+ * FactoryPrato (Factory Method)
+ * -----------------------------
+ * Responsável por criar objetos Prato a partir do código do cardápio.
+ */
 public class FactoryPrato {
 
     public Prato criarPorCodigo(int codigo) {
