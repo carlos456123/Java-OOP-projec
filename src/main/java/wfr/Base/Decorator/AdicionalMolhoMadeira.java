@@ -2,11 +2,7 @@ package wfr.Base.Decorator;
 
 import wfr.Base.Prato;
 
-/**
- * AdicionalMolhoMadeira
- * ---------------------
- * Decorator que adiciona molho madeira extra ao prato.
- */
+
 public class AdicionalMolhoMadeira extends PratoDecorator {
 
     public AdicionalMolhoMadeira(Prato pratoInterno) {

@@ -3,11 +3,7 @@ package wfr.Singleton;
 import wfr.Factory.FactoryPrato;
 import wfr.SalvaVenda.ArquivoVendas;
 
-/**
- * ClassSingleton
- * --------------
- * Singleton da aplicação. Centraliza objetos compartilhados.
- */
+
 public final class ClassSingleton {
 
     private static final ClassSingleton INSTANCIA = new ClassSingleton();

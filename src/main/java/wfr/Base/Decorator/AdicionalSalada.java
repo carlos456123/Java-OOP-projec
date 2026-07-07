@@ -2,11 +2,6 @@ package wfr.Base.Decorator;
 
 import wfr.Base.Prato;
 
-/**
- * AdicionalSalada
- * ---------------
- * Decorator que adiciona salada ao prato.
- */
 public class AdicionalSalada extends PratoDecorator {
 
     public AdicionalSalada(Prato pratoInterno) {
@@ -20,6 +15,6 @@ public class AdicionalSalada extends PratoDecorator {
 
     @Override
     public double getPreco() {
-        return pratoInterno.getPreco() + 3.00; // + R$ 3,00
+        return pratoInterno.getPreco() + 3.00;
     }
 }

@@ -9,11 +9,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-/**
- * GestorDeVendas
- * --------------
- * Camada de regras de negócio das vendas.
- */
 public class GestorDeVendas {
 
     private final ArquivoVendas arquivoVendas;
@@ -38,58 +33,33 @@ public class GestorDeVendas {
 
     public void listarTodasComTotal() {
         System.out.println("---- VENDAS REGISTRADAS ----");
-        List<String> linhas;
-        try {
-            linhas = arquivoVendas.lerTodasLinhas();
-        } catch (IOException e) {
-            System.out.println("Erro ao ler vendas: " + e.getMessage());
-            return;
-        }
-        if (linhas.isEmpty()) {
+        List<Venda> vendas = carregarVendasValidas();
+        if (vendas.isEmpty()) {
             System.out.println("Nenhuma venda encontrada.");
             return;
         }
 
         double totalGeral = 0.0;
-        int registros = 0;
-
-        for (String linha : linhas) {
-            System.out.println(linha);
-            String[] colunas = linha.split(";");
-            if (colunas.length >= 7) {
-                totalGeral += parseDoubleSeguro(colunas[6]);
-                registros++;
-            }
+        for (Venda venda : vendas) {
+            System.out.println(venda.toCsv());
+            totalGeral += venda.getTotal();
         }
 
         System.out.printf("---- TOTAL DE VENDAS (%d registros): R$ %.2f ----%n",
-                registros, totalGeral);
+                vendas.size(), totalGeral);
     }
 
     public void buscarPorCliente(String termo) {
         System.out.println("---- BUSCAR POR CLIENTE ----");
-        String alvo = termo == null ? "" : termo.toLowerCase(Locale.ROOT);
-
-        List<String> linhas;
-        try {
-            linhas = arquivoVendas.lerTodasLinhas();
-        } catch (IOException e) {
-            System.out.println("Erro ao ler vendas: " + e.getMessage());
-            return;
-        }
 
         double totalCliente = 0.0;
         int registros = 0;
 
-        for (String linha : linhas) {
-            String[] colunas = linha.split(";");
-            if (colunas.length >= 7) {
-                String cliente = colunas[1].toLowerCase(Locale.ROOT);
-                if (cliente.contains(alvo)) {
-                    System.out.println(linha);
-                    totalCliente += parseDoubleSeguro(colunas[6]);
-                    registros++;
-                }
+        for (Venda venda : carregarVendasValidas()) {
+            if (venda.nomeClienteContem(termo)) {
+                System.out.println(venda.toCsv());
+                totalCliente += venda.getTotal();
+                registros++;
             }
         }
 
@@ -107,33 +77,10 @@ public class GestorDeVendas {
             totalPorCodigo.put(item.codigo, 0.0);
         }
 
-        List<String> linhas;
-        try {
-            linhas = arquivoVendas.lerTodasLinhas();
-        } catch (IOException e) {
-            System.out.println("Erro ao ler vendas: " + e.getMessage());
-            return;
-        }
-
-        for (String linha : linhas) {
-            String[] colunas = linha.split(";");
-            if (colunas.length >= 7) {
-                try {
-                    int codigo = Integer.parseInt(colunas[2].trim());
-                    int quantidade = Integer.parseInt(colunas[5].trim());
-                    double total = parseDoubleSeguro(colunas[6]);
-
-                    quantidadePorCodigo.put(
-                            codigo,
-                            quantidadePorCodigo.getOrDefault(codigo, 0) + quantidade
-                    );
-                    totalPorCodigo.put(
-                            codigo,
-                            totalPorCodigo.getOrDefault(codigo, 0.0) + total
-                    );
-                } catch (NumberFormatException ignore) {
-                }
-            }
+        for (Venda venda : carregarVendasValidas()) {
+            int codigo = venda.getCodigoPratoBase();
+            quantidadePorCodigo.merge(codigo, venda.getQuantidade(), Integer::sum);
+            totalPorCodigo.merge(codigo, venda.getTotal(), Double::sum);
         }
 
         double totalGeral = 0.0;
@@ -145,6 +92,27 @@ public class GestorDeVendas {
                     item.codigo, item.nome, q, t);
         }
         System.out.printf("TOTAL GERAL: R$ %.2f%n", totalGeral);
+    }
+
+    /**
+     * Lê todas as linhas do arquivo e converte cada uma em Venda via Venda.fromCsv(),
+     * descartando silenciosamente linhas malformadas. Centraliza aqui a leitura +
+     * conversão que antes estava duplicada em 3 métodos diferentes.
+     */
+    private List<Venda> carregarVendasValidas() {
+        List<String> linhas;
+        try {
+            linhas = arquivoVendas.lerTodasLinhas();
+        } catch (IOException e) {
+            System.out.println("Erro ao ler vendas: " + e.getMessage());
+            return List.of();
+        }
+
+        List<Venda> vendas = new ArrayList<>();
+        for (String linha : linhas) {
+            Venda.fromCsv(linha).ifPresent(vendas::add);
+        }
+        return vendas;
     }
 
     public void desfazerUltimaVenda() {
@@ -160,11 +128,4 @@ public class GestorDeVendas {
         }
     }
 
-    private static double parseDoubleSeguro(String texto) {
-        try {
-            return Double.parseDouble(texto.replace(",", ".").trim());
-        } catch (Exception e) {
-            return 0.0;
-        }
-    }
 }

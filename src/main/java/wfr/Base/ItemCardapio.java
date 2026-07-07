@@ -2,11 +2,7 @@ package wfr.Base;
 
 import java.util.Optional;
 
-/**
- * ItemCardapio
- * ------------
- * Enum com os pratos fixos do cardápio e seus preços base.
- */
+
 public enum ItemCardapio {
     Lasanha(1, "Lasanha", 25.00),
     FrangoParmegiana(2, "Frango à parmegiana", 28.00),

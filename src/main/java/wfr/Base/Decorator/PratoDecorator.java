@@ -2,11 +2,6 @@ package wfr.Base.Decorator;
 
 import wfr.Base.Prato;
 
-/**
- * PratoDecorator
- * --------------
- * Classe base para todos os decoradores de Prato (adicionais).
- */
 public abstract class PratoDecorator implements Prato {
     protected final Prato pratoInterno;
     protected PratoDecorator(Prato pratoInterno) {

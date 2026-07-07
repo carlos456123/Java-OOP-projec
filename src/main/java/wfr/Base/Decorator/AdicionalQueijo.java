@@ -1,12 +1,6 @@
 package wfr.Base.Decorator;
 
 import wfr.Base.Prato;
-
-/**
- * AdicionalQueijo
- * ---------------
- * Decorator que adiciona queijo ao prato.
- */
 public class AdicionalQueijo extends PratoDecorator {
 
     public AdicionalQueijo(Prato pratoInterno) {

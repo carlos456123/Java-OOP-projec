@@ -2,11 +2,6 @@ package wfr.Leitor;
 
 import java.util.Scanner;
 
-/**
- * EntradaConsole
- * --------------
- * Centraliza leitura de dados pelo teclado.
- */
 public class LeitorDeTexto {
 
     private final Scanner scanner = new Scanner(System.in);

@@ -1,18 +1,12 @@
 package wfr.SalvaVenda;
 
 import wfr.Base.Venda;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.List;
 
-/**
- * ArquivoVendas
- * -------------
- * Responsável por gravar e ler vendas do arquivo vendas.txt.
- */
 public class ArquivoVendas {
 
     private final Path arquivoVendas;

@@ -1,6 +1,5 @@
 package wfr;
 
-import wfr.Base.Decorator.AdicionalMolhoMadeira;
 import wfr.Base.ItemCardapio;
 import wfr.Base.Prato;
 import wfr.Base.Decorator.AdicionalQueijo;
@@ -13,11 +12,7 @@ import wfr.Singleton.ClassSingleton;
 
 import java.util.Optional;
 
-/**
- * Main
- * ----
- * Classe principal do sistema WFRestaurant.
- */
+
 public class Main {
 
     public static void main(String[] args) {
@@ -99,7 +94,6 @@ public class Main {
             return;
         }
 
-        // Decorators (adicionais)
         while (true) {
             int opcAdicional = leitor.lerInteiro(
                     "Adicionar adicional? [1=Queijo, 2=Salada, 3=Molho, 0=nenhum/continuar]: ");
